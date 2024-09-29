@@ -25,6 +25,8 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 import plotly.graph_objects as go
 from fastapi.responses import JSONResponse
+from scores import load_scores, score_to_numeric
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 app = FastAPI()
@@ -116,31 +118,6 @@ class ChatMessage(BaseModel):
     username: str
     message: str
 
-# Chat endpoint
-# @app.post("/chat/")
-# async def chat_endpoint(chat_message: ChatMessage, token: str = Depends(oauth2_scheme)):
-#     username = verify_token(token)
-    
-#     # Load chat store and initialize the chatbot with user data
-#     chat_store = load_chat_store()
-
-#     # Initialize the chatbot
-#     users = load_users()
-#     if username not in users['usernames']:
-#         raise HTTPException(status_code=404, detail="Username not found")
-
-#     user_info = users['usernames'][username]
-#     agent = initialize_chatbot(chat_store, username, user_info)
-#     print(username)
-#     print(user_info)
-    
-#     try:
-#         text = chat_response(agent, chat_store, chat_message.message)
-#         return {"status": "ok", "text": text}
-#     except:
-#         return {"status": "false"}
-
-# Chat endpoint
 @app.post("/chat/")
 async def chat_endpoint(chat_message: ChatMessage, token: str = Depends(oauth2_scheme)):
     username = verify_token(token)
@@ -170,13 +147,56 @@ async def chat_endpoint(chat_message: ChatMessage, token: str = Depends(oauth2_s
 
     # Initialize the chatbot with the user's info
     agent = initialize_chatbot(chat_store, username, formatted_user_info)
-    print(username)
-    print(formatted_user_info)
     try:
         text = chat_response(agent, chat_store, chat_message.message)
         return {"status": "ok", "text": text, "user_info": formatted_user_info}
     except Exception as e:
         return {"status": "false", "error": str(e)}
+    
+@app.get("/scores/last7days/")
+def get_user_scores_last7days(token: str = Depends(oauth2_scheme)):
+    username = verify_token(token)
+    df = load_scores(SCORES_FILE, username)
+    if df.empty:
+        raise HTTPException(status_code=404, detail="No data found for user")
+    else:
+        df['Time'] = pd.to_datetime(df['Time'])
+        recent_date = df['Time'].max()
+        start_date = recent_date - timedelta(days=6)
+        df_filtered = df[(df['Time'] >= start_date) & (df['Time'] <= recent_date)]
+        df_filtered = df_filtered.sort_values(by='Time')
+        df_filtered['Score_num'] = df_filtered['Score'].apply(score_to_numeric)
+        # Chuyển dữ liệu về dạng JSON serializable
+        df_filtered['Time'] = df_filtered['Time'].dt.strftime('%Y-%m-%d')
+        return df_filtered.to_dict(orient='records')
+
+@app.get("/scores/bydate/")
+def get_user_scores_by_date(date: str, token: str = Depends(oauth2_scheme)):
+    username = verify_token(token)
+    df = load_scores(SCORES_FILE, username)
+    if df.empty:
+        raise HTTPException(status_code=404, detail="No data found for user")
+    else:
+        df['Time'] = pd.to_datetime(df['Time'])
+        selected_date = pd.to_datetime(date)
+        filtered_df = df[df["Time"].dt.date == selected_date.date()]
+        if filtered_df.empty:
+            raise HTTPException(status_code=404, detail=f"No data for date {date}")
+        else:
+            filtered_df['Time'] = filtered_df['Time'].dt.strftime('%Y-%m-%d')
+            return filtered_df.to_dict(orient='records')
+        
+@app.get("/scores/")
+def get_user_scores(token: str = Depends(oauth2_scheme)):
+    username = verify_token(token)
+    df = load_scores(SCORES_FILE, username)
+    if df.empty:
+        raise HTTPException(status_code=404, detail="No data found for user")
+    else:
+        df['Time'] = pd.to_datetime(df['Time'])
+        df['Time'] = df['Time'].dt.strftime('%Y-%m-%d')
+        return df.to_dict(orient='records')
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
