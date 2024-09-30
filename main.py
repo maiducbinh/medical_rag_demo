@@ -88,22 +88,28 @@ def register(registerRequest: RegisterRequest):
     save_users(users)
     return {"message": "User registered successfully"}
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 @app.post("/login/")
-def login(username: str = Form(...), password: str = Form(...)):
+def login(login_request: LoginRequest):
+    username = login_request.username
+    password = login_request.password
     users = load_users()
+
     if username not in users['usernames']:
         raise HTTPException(status_code=404, detail="Username not found")
+
     stored_password = users['usernames'][username]['password']
     if hash_password(password) != stored_password:
         raise HTTPException(status_code=401, detail="Incorrect password")
-    
+
     # Tạo token JWT
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": username}, expires_delta=access_token_expires)
-    
+
     return {"access_token": access_token, "token_type": "bearer"}
-
-
 
 @app.post("/guest-login/")
 def guest_login():
