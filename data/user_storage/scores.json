@@ -1,0 +1,23 @@
+[
+    {
+        "username": "maiducbinh",
+        "Time": "2024-10-03 09:24:32",
+        "Score": "average",
+        "Content": "User has low Hemoglobin level at 12.5 g/dL indicating anemia, slightly elevated Packed Cell Volume at 57.5%, and borderline low Platelet count at 150000/cumm. User is 50 years old.",
+        "Total guess": "average"
+    },
+    {
+        "username": "test",
+        "Time": "2024-10-03 09:27:55",
+        "Score": "average",
+        "Content": "CBC report indicates low Hemoglobin (12.5 g/dL), elevated PCV (57.5%), and borderline low platelet count (150000/cumm). Anemia is present, and further evaluation is recommended.",
+        "Total guess": "average"
+    },
+    {
+        "username": "maiducbinh",
+        "Time": "2024-10-03 09:37:29",
+        "Score": "average",
+        "Content": "User has low Hemoglobin level at 12.5 g/dL indicating anemia, slightly elevated Packed Cell Volume at 57.5%, and borderline low Platelet count at 150000/cumm. User is 50 years old.",
+        "Total guess": "average"
+    }
+]

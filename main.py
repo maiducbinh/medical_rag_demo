@@ -154,8 +154,8 @@ async def chat_endpoint(chat_message: ChatMessage, token: str = Depends(oauth2_s
     # Initialize the chatbot with the user's info
     agent = initialize_chatbot(chat_store, username, formatted_user_info)
     try:
-        text = chat_response(agent, chat_store, chat_message.message)
-        # text = chat_interface(agent, chat_store, chat_message.message)
+        # text = chat_response(agent, chat_store, chat_message.message)
+        text = chat_interface(agent, chat_store, chat_message.message)
         print(text)
         return {"status": "ok", "text": text, "user_info": formatted_user_info}
     except Exception as e:
