@@ -26,9 +26,9 @@ def save_score(score, content, total_guess, username):
         """Write score and content to a file.
 
         Args:
-            score (string): Score of the user's mental health.
-            content (string): Content of the user's mental health.
-            total_guess (string): Total guess of the user's mental health.
+            score (string): Score of the user's health status.
+            content (string): Content of the user's health status.
+            total_guess (string): Total guess of the user's health status.
         """
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new_entry = {
@@ -73,7 +73,7 @@ def initialize_chatbot(chat_store, username, user_info):
         metadata=ToolMetadata(
             name="dsm5",
             description=(
-                f"Provides information related to mental disorders according to DSM5 standards. Use detailed plain text questions as input for the tool."
+                f"Provides information related to health status of the user. Use detailed plain text questions as input for the tool."
             ),
         )
     )
@@ -90,3 +90,30 @@ def chat_response(agent, chat_store, prompt):
     response = str(agent.chat(prompt))
     chat_store.persist(CONVERSATION_FILE)
     return response
+
+def chat_interface(agent, chat_store, prompt):
+    response = agent.chat(prompt)
+    text = response.response
+    sources = [source for source in response.source_nodes]
+    node_info = []
+
+    for node_with_score in sources:
+        node = node_with_score.node
+        info = {
+            "id": node.id_,
+            "file_name": node.metadata.get("file_name"),
+            "file_path": node.metadata.get("file_path"),
+            "file_type": node.metadata.get("file_type"),
+            "file_size": node.metadata.get("file_size"),
+            "creation_date": node.metadata.get("creation_date"),
+            "last_modified_date": node.metadata.get("last_modified_date"),
+            "section_summary": node.metadata.get("section_summary"),
+            "text": node.text,
+            "score": node_with_score.score
+        }
+        node_info.append(info)
+    chat_store.persist(CONVERSATION_FILE)
+    return {
+        "response": text,
+        "sources": node_info
+    }

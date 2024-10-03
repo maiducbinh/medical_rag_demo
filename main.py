@@ -12,7 +12,7 @@ from llama_index.llms.openai import OpenAI
 import openai
 from src.index_builder import build_indexes
 from src.ingest_pipeline import ingest_documents
-from src.conversation_engine import initialize_chatbot, load_chat_store, chat_response
+from src.conversation_engine import initialize_chatbot, load_chat_store, chat_response, chat_interface
 from llama_index.core import Settings
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
@@ -155,6 +155,8 @@ async def chat_endpoint(chat_message: ChatMessage, token: str = Depends(oauth2_s
     agent = initialize_chatbot(chat_store, username, formatted_user_info)
     try:
         text = chat_response(agent, chat_store, chat_message.message)
+        # text = chat_interface(agent, chat_store, chat_message.message)
+        print(text)
         return {"status": "ok", "text": text, "user_info": formatted_user_info}
     except Exception as e:
         return {"status": "false", "error": str(e)}

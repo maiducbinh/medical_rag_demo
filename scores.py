@@ -15,11 +15,11 @@ def load_scores(file, specific_username):
 # src/utils.py
 def score_to_numeric(score):
     score = score.lower()
-    if score == "kém":
+    if score == "poor":
         return 1
-    elif score == "trung bình":
+    elif score == "average":
         return 2
-    elif score == "khá":
+    elif score == "normal":
         return 3
-    elif score == "tốt":
+    elif score == "good":
         return 4

@@ -1,35 +1,17 @@
 usernames:
-  john_doe:
-    address: 123 Main St
-    age: 30
-    email: john@example.com
-    gender: Male
-    job: Engineer
-    name: John Doe
-    password: e0e6097a6f8af07daf5fc7244336ba37133713a8fc7345c36d667dfa513fabaa
   maiducbinh:
-    address: dfdsfd
+    address: dfdf
     age: 21
-    email: ducbinh123bg@gmail.com
-    gender: Nam
-    job: cntt
-    name: "Mai \u0110\u1EE9c B\xECnh"
+    email: binhmai2205@gmail.com
+    gender: Male
+    job: dfd
+    name: Mai Duc Binh
     password: ca5cc273801801bc0c08690d4a8bf9d102a23fcd1b93c1bef2051851a681e4cf
-  maiducbinh1:
-    address: "S\u1ED1 nh\xE0 98, \u0111\u01B0\u1EDDng Tr\u1EA7n \u0110\u0103ng Tuy\u1EC3\
-      n"
-    age: 19
+  test:
+    address: dsfds
+    age: 257
     email: 111davidlazzaro@gmail.com
-    gender: Nam
-    job: "sinh vi\xEAn"
-    name: "Mai \u0110\u1EE9c B\xECnh"
-    password: ca5cc273801801bc0c08690d4a8bf9d102a23fcd1b93c1bef2051851a681e4cf
-  maiducbinh2:
-    address: "S\u1ED1 nh\xE0 98, \u0111\u01B0\u1EDDng Tr\u1EA7n \u0110\u0103ng Tuy\u1EC3\
-      n"
-    age: 21
-    email: 111davidlazzaro@gmail.com
-    gender: Nam
-    job: "sinh vi\xEAn"
-    name: "Mai \u0110\u1EE9c B\xECnh"
+    gender: Other
+    job: sdfsd
+    name: dfdsf
     password: ca5cc273801801bc0c08690d4a8bf9d102a23fcd1b93c1bef2051851a681e4cf

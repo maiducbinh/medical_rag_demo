@@ -1,0 +1,1 @@
+if chatbot does not run, clear chat history
